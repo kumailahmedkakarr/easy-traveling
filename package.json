@@ -1,0 +1,20 @@
+{
+  "name": "easetraveling",
+  "version": "2.0.0",
+  "description": "Easetraveling - intercity bus and 2D car booking (Node.js REST API + MySQL + static frontend)",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --no-warnings --test \"tests/*.test.js\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "mysql2": "^3.11.3"
+  }
+}
