@@ -16,8 +16,6 @@ function applySecurityHeaders(res) {
     "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com",
     "img-src 'self' data: https://*.tile.openstreetmap.org https://images.unsplash.com",
     "connect-src 'self'",
-    "worker-src 'self'",
-    "manifest-src 'self'",
     "frame-ancestors 'none'",
   ].join('; '));
   if (config.isProduction) res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');

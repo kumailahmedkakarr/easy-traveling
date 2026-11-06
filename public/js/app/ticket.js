@@ -3,6 +3,18 @@ import { state } from './state.js';
 import { goStep } from './steps.js';
 import { setPickup } from './map.js';
 
+/** Where to send the money (from the owner's settings). */
+function payNote(b) {
+  const p = state.meta.payment || {};
+  const total = money(b.amount.total);
+  const text = {
+    easypaisa: `Send <b>${total}</b> to Easypaisa <b class="select-all">${escapeHtml(p.easypaisa || '')}</b> and keep the receipt.`,
+    bank: `Transfer <b>${total}</b> to ${escapeHtml(p.bankName || 'bank')} account <b class="select-all">${escapeHtml(p.bankAccount || '')}</b> and keep the receipt.`,
+    cash: 'Pay the driver in cash when you board.',
+  }[b.paymentMethod];
+  return text ? `<p class="mt-3 text-[11px] bg-brand-50 text-ink rounded-xl p-2.5"><i class="fa-solid fa-circle-info text-brand-600 mr-1"></i>${text}</p>` : '';
+}
+
 /** Ticket card used after booking and in "Track booking". */
 export function ticketHtml(b, { cancelable = false } = {}) {
   const cancelled = b.status === 'Cancelled';
@@ -25,6 +37,7 @@ export function ticketHtml(b, { cancelable = false } = {}) {
     <dl class="mt-3 text-xs divide-y divide-slate-100">${rows.map(([k, v]) => `<div class="flex justify-between gap-3 py-1.5"><dt class="text-ink-soft">${k}</dt><dd class="font-semibold text-right">${v}</dd></div>`).join('')}</dl>
     <div class="mt-2 space-y-1">${b.passengers.map((p, i) => `<div class="flex justify-between text-[11px] bg-slate-50 rounded-lg px-2 py-1.5"><span><b>${i + 1}. ${escapeHtml(p.name)}</b> · CNIC ${escapeHtml(p.cnic)}</span><span class="font-bold text-brand-600">Seat ${b.seats[i]}</span></div>`).join('')}</div>
     <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-200"><span class="text-xs text-ink-soft">Total</span><span class="text-lg font-black">${money(b.amount.total)}</span></div>
+    ${cancelled ? '' : payNote(b)}
     ${cancelable && !cancelled && b.date >= todayIso() ? `<button data-action="cancelBooking" data-args='["${escapeHtml(b.id)}"]' class="no-print mt-3 w-full text-xs font-extrabold text-rose-600 border border-rose-200 rounded-xl py-2.5">Cancel this booking</button>` : ''}
   </div>`;
 }

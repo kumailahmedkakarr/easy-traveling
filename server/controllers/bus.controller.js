@@ -12,6 +12,7 @@ module.exports = (bookingService) => ({
     paymentMethods: catalog.PAYMENT_METHODS,
     routes: catalog.routeCards(),
     support: config.support,
+    payment: config.payment,
   }),
 
   list(ctx) {

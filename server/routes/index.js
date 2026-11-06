@@ -20,7 +20,11 @@ function buildApiRouter({ adminAuth, bookingService, adminService, store, auth }
 
   const api = new Router();
 
-  api.get('/health', () => ({ status: 'ok', uptime: Math.round(process.uptime()) }));
+  // Open /api/health in the browser to see if the database is connected.
+  api.get('/health', async () => {
+    const database = await store.ping();
+    return { status: database.connected ? 'ok' : 'database-error', uptime: Math.round(process.uptime()), database };
+  });
   api.get('/meta', busCtl.meta);
 
   // Bus booking (no account needed)

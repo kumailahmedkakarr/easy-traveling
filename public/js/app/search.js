@@ -6,6 +6,7 @@ import { loadRides } from './rides.js';
 
 const BUS_CITIES = ['Quetta', 'Karachi'];
 const CAR_CITIES = ['Quetta', 'Karachi', 'Lahore', 'Islamabad'];
+export const citiesFor = (mode) => (mode === 'bus' ? BUS_CITIES : CAR_CITIES);
 const options = (list, selected) => list.map((c) => `<option ${c === selected ? 'selected' : ''}>${c}</option>`).join('');
 
 export function fillCitySelects() {

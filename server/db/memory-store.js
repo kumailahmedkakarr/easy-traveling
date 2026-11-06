@@ -27,6 +27,7 @@ function createMemoryStore({ file = null } = {}) {
       if (file && fs.existsSync(file)) { try { data = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* corrupt file: start fresh */ } }
     },
     async close() {},
+    async ping() { return { driver: 'memory', connected: true, persistent: Boolean(file) }; },
 
     // ---------- admins ----------
     async findAdminById(id) { return clone(data.admins.find((a) => a.id === id)) || null; },

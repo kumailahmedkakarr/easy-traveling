@@ -37,7 +37,7 @@ async function createApp({ store = createStore() } = {}) {
   const auth = createAuthMiddleware(adminAuth);
   const router = buildApiRouter({ adminAuth, bookingService, adminService, store, auth });
 
-  const server = http.createServer(async (req, res) => {
+  const handler = async (req, res) => {
     const started = Date.now();
     const url = new URL(req.url, 'http://localhost');
     applySecurityHeaders(res);
@@ -72,9 +72,10 @@ async function createApp({ store = createStore() } = {}) {
       logger.error(err);
       return sendJson(res, 500, { error: 'Something went wrong on our side' });
     }
-  });
+  };
 
-  return { server, store };
+  const server = http.createServer(handler);
+  return { server, store, handler };
 }
 
 module.exports = { createApp };

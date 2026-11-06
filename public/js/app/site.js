@@ -1,45 +1,43 @@
 import { $, escapeHtml, money } from '../shared/dom.js';
 import { state } from './state.js';
 import { applyRoute } from './search.js';
+import { showView } from './navigation.js';
 
-/** Popular route cards on the home page (from GET /api/meta). */
+/** Prices on the bus photo cards + the 2D car route cards (from GET /api/meta). */
 export function renderRoutes() {
   const routes = state.meta.routes || [];
-  $('routes-grid').innerHTML = routes.map((r) => `
-    <button class="tile route-card text-left" data-action="bookRoute" data-args='${JSON.stringify([r.mode, r.from, r.to])}'>
-      <div class="flex items-center justify-between text-xs font-extrabold text-brand-600">
-        <span class="bg-brand-50 px-2 py-0.5 rounded-full">${r.mode === 'bus' ? 'Bus' : '2D Car'}</span>
-        <i class="fa-solid ${r.mode === 'bus' ? 'fa-bus' : 'fa-car-side'} text-base"></i>
-      </div>
-      <div class="mt-2 font-extrabold text-lg">${escapeHtml(r.from)} → ${escapeHtml(r.to)}</div>
-      <div class="text-xs text-ink-soft h-4">${r.via ? `via ${escapeHtml(r.via)}` : 'Direct'}</div>
-      <div class="mt-3 flex items-end justify-between"><span class="text-xs text-ink-soft">from</span><b class="text-brand-600 text-lg">${money(r.fromPrice)}</b></div>
+  document.querySelectorAll('[data-route-price]').forEach((el) => {
+    const [mode, from, to] = el.dataset.routePrice.split('|');
+    const r = routes.find((x) => x.mode === mode && x.from === from && x.to === to);
+    if (r) el.textContent = money(r.fromPrice);
+  });
+  $('routes-grid').innerHTML = routes.filter((r) => r.mode === 'car').map((r) => `
+    <button class="card !p-4 text-left lift" data-action="bookRoute" data-args='${JSON.stringify([r.mode, r.from, r.to])}'>
+      <div class="font-extrabold">${escapeHtml(r.from)} <i class="fa-solid fa-arrow-right text-[10px] text-brand-500"></i> ${escapeHtml(r.to)}</div>
+      <div class="flex items-center justify-between mt-2 text-xs"><span class="text-slate-500">from</span><b class="text-brand-600">${money(r.fromPrice)}</b></div>
     </button>`).join('');
 }
 
-/** Phone / WhatsApp / email cards are shown only when the owner set them in .env */
-export function renderSupport() {
-  const { phone, whatsapp, email } = state.meta.support || {};
-  const show = (id, href) => { const a = $(id); a.href = href; a.classList.remove('hidden'); };
-  if (phone) { show('help-call', `tel:${phone.replace(/\s/g, '')}`); $('help-call-text').textContent = phone; }
-  if (whatsapp) show('help-wa', `https://wa.me/${whatsapp}`);
-  if (email) { show('help-mail', `mailto:${email}`); $('help-mail-text').textContent = email; }
+/** Easypaisa / bank details come from the owner's settings (.env), with the original numbers as default. */
+export function renderPayment() {
+  const p = state.meta.payment;
+  if (!p) return;
+  $('pay-easypaisa').textContent = p.easypaisa;
+  $('pay-bank-name').textContent = p.bankName;
+  $('pay-bank-account').textContent = p.bankAccount;
+  $('f-easypaisa').textContent = p.easypaisa;
+  $('f-bank').textContent = `${p.bankName} ${p.bankAccount}`;
 }
 
-export function goToBooking() {
-  document.getElementById('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
+/** If the owner set phone / email / WhatsApp in .env, they replace the defaults on the Contact page. */
+export function renderContact() {
+  const { phone, whatsapp, email } = state.meta.support || {};
+  if (phone) { $('c-phone').textContent = phone; $('c-phone').href = `tel:${phone.replace(/[^\d+]/g, '')}`; }
+  if (email) { $('c-email').textContent = email; $('c-email').href = `mailto:${email}`; }
+  if (whatsapp) { $('c-wa').href = `https://wa.me/${whatsapp}`; $('c-wa').classList.remove('hidden'); }
 }
 
 export function bookRoute(_el, mode, from, to) {
+  showView('book');
   applyRoute(mode, from, to);
-  goToBooking();
-}
-
-/** Opening splash: shown briefly once per visit, then fades out. */
-export function hideSplash() {
-  const splash = $('splash');
-  let seen = false;
-  try { seen = sessionStorage.getItem('et.splash') === '1'; sessionStorage.setItem('et.splash', '1'); } catch { /* ignore */ }
-  const wait = seen ? 0 : 1300;
-  setTimeout(() => { splash.classList.add('done'); setTimeout(() => splash.remove(), 600); }, wait);
 }

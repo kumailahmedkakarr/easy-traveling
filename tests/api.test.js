@@ -160,21 +160,29 @@ for (const [driverName, make] of drivers) {
     assert.equal((await api('POST', '/api/contact', { body: { name: 'A', email: 'bad', message: '' } })).status, 400);
   });
 
-  test('meta: popular routes, support info and all payment methods', async () => {
+  test('meta: popular routes, payment accounts and payment methods', async () => {
     const { data } = await api('GET', '/api/meta');
     assert.ok(data.routes.find((r) => r.mode === 'bus' && r.from === 'Quetta' && r.to === 'Karachi' && r.fromPrice === 3000));
     assert.ok(data.routes.find((r) => r.mode === 'car' && r.from === 'Quetta' && r.to === 'Lahore'));
-    assert.deepEqual(data.paymentMethods.bus, ['easypaisa', 'jazzcash', 'raast', 'bank']);
+    assert.deepEqual(data.paymentMethods.bus, ['easypaisa', 'bank']);
     assert.ok(data.paymentMethods.car.includes('cash') && !data.paymentMethods.bus.includes('cash'));
     assert.ok('phone' in data.support && 'whatsapp' in data.support && 'email' in data.support);
+    assert.ok(data.payment.easypaisa && data.payment.bankAccount && data.payment.bankName);
   });
 
-  test('JazzCash and Raast are accepted; cash is only for 2D car', async () => {
-    assert.equal((await api('POST', '/api/bus-bookings', { body: busBody(['F1'], { paymentMethod: 'jazzcash' }) })).status, 201);
-    assert.equal((await api('POST', '/api/bus-bookings', { body: busBody(['F2'], { paymentMethod: 'raast' }) })).status, 201);
+  test('payment: Easypaisa and Bank accepted; cash is only for 2D car', async () => {
+    assert.equal((await api('POST', '/api/bus-bookings', { body: busBody(['F1'], { paymentMethod: 'bank' }) })).status, 201);
     const cash = await api('POST', '/api/bus-bookings', { body: busBody(['F3'], { paymentMethod: 'cash' }) });
     assert.equal(cash.status, 400);
     assert.ok(cash.data.details.paymentMethod);
+    assert.equal((await api('POST', '/api/bus-bookings', { body: busBody(['F2'], { paymentMethod: 'jazzcash' }) })).status, 400);
+  });
+
+  test('health shows the database status', async () => {
+    const { data } = await api('GET', '/api/health');
+    assert.equal(data.status, 'ok');
+    assert.equal(data.database.connected, true);
+    assert.ok(['memory', 'mysql'].includes(data.database.driver));
   });
 
   test('admin: 7-day chart data and contact messages inbox', async () => {
@@ -191,18 +199,11 @@ for (const [driverName, make] of drivers) {
     assert.equal((await api('GET', '/api/admin/messages')).status, 401);
   });
 
-  test('app files: manifest, service worker and icons are served', async () => {
-    const manifest = await fetch(`${base}/manifest.webmanifest`);
-    assert.equal(manifest.status, 200);
-    assert.match(manifest.headers.get('content-type'), /manifest\+json/);
-    const m = await manifest.json();
-    assert.equal(m.display, 'standalone');
-    for (const icon of m.icons) assert.equal((await fetch(base + icon.src)).status, 200, icon.src);
-    const sw = await fetch(`${base}/sw.js`);
-    assert.equal(sw.status, 200);
-    assert.match(sw.headers.get('content-type'), /javascript/);
+  test('public site files and robots.txt are served', async () => {
     assert.equal((await fetch(`${base}/robots.txt`)).status, 200);
+    const home = await fetch(`${base}/`);
+    assert.equal(home.status, 200);
+    assert.match(await home.text(), /Ease Traveling/);
   });
-
   });
 }

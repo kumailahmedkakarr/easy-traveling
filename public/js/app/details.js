@@ -7,10 +7,7 @@ import { showTicket } from './ticket.js';
 import { loadSeatMap } from './seats.js';
 import { getProfile, saveProfile, saveTrip } from './trips.js';
 
-const PAY_LABELS = {
-  easypaisa: ['fa-mobile-screen', 'Easypaisa'], jazzcash: ['fa-wallet', 'JazzCash'], raast: ['fa-bolt', 'Raast'],
-  bank: ['fa-building-columns', 'Bank'], cash: ['fa-money-bill-wave', 'Cash'],
-};
+const PAY_LABELS = { easypaisa: ['fa-wallet', 'Easypaisa'], bank: ['fa-building-columns', 'Bank'], cash: ['fa-money-bill-wave', 'Cash'] };
 const showError = (text) => { const e = $('form-error'); e.textContent = text; e.classList.toggle('hidden', !text); };
 
 export function renderDetails() {
@@ -30,8 +27,8 @@ export function renderDetails() {
 
   const methods = state.meta.paymentMethods[state.mode];
   $('pay-options').innerHTML = methods.map((m, i) => `
-    <label class="cursor-pointer"><input type="radio" name="pay" value="${m}" class="peer sr-only" ${i === 0 ? 'checked' : ''}>
-      <span class="peer-checked:border-brand-500 peer-checked:bg-brand-50 border-2 border-slate-200 rounded-xl p-3 flex flex-col items-center gap-1 text-xs font-bold"><i class="fa-solid ${PAY_LABELS[m][0]} text-lg"></i>${PAY_LABELS[m][1]}</span></label>`).join('');
+    <label class="cursor-pointer"><input type="radio" name="pay" value="${m}" data-change="payChanged" class="peer sr-only" ${i === 0 ? 'checked' : ''}>
+      <span class="peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 border-2 border-slate-200 rounded-xl p-3 flex flex-col items-center gap-1 text-xs font-bold"><i class="fa-solid ${PAY_LABELS[m][0]} text-lg"></i>${PAY_LABELS[m][1]}</span></label>`).join('');
 
   $('fare-label').textContent = `Fare (${state.seats.length} × ${money(unitPrice())})`;
   $('fare-base').textContent = money(fareBase());
@@ -39,9 +36,22 @@ export function renderDetails() {
   $('fee-row').classList.toggle('hidden', !isBus());
   $('fare-total').textContent = money(fareTotal());
   prefill();
+  paintPayInfo();
   paintPickup();
   showError('');
   pickingMode(true, paintPickup);
+}
+
+/** Tells the person where to send the money for the payment method they picked. */
+export function paintPayInfo() {
+  const method = (document.querySelector('input[name="pay"]:checked') || {}).value;
+  const p = state.meta.payment || {};
+  const total = money(fareTotal());
+  $('pay-info').innerHTML = ({
+    easypaisa: `<i class="fa-solid fa-circle-info mr-1 text-brand-600"></i>After booking, send <b>${total}</b> to Easypaisa <b class="select-all">${p.easypaisa || ''}</b> and keep the receipt.`,
+    bank: `<i class="fa-solid fa-circle-info mr-1 text-brand-600"></i>After booking, transfer <b>${total}</b> to ${p.bankName || 'the bank'} account <b class="select-all">${p.bankAccount || ''}</b> and keep the receipt.`,
+    cash: '<i class="fa-solid fa-circle-info mr-1 text-brand-600"></i>Pay the driver in cash when you board.',
+  })[method] || '';
 }
 
 /** Fills the form with the details saved on this device (only if the person chose to remember them). */

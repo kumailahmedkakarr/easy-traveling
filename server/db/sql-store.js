@@ -52,6 +52,9 @@ function createSqlStore(db) {
   return {
     init: () => db.init(),
     close: () => db.close(),
+    async ping() {
+      try { await db.query('SELECT 1 AS ok'); return { driver: 'mysql', connected: true, persistent: true }; } catch { return { driver: 'mysql', connected: false, persistent: true }; }
+    },
 
     // ---------- admins ----------
     async findAdminById(id) {

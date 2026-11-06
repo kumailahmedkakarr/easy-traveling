@@ -8,7 +8,7 @@ const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json', '.webp': 'image/webp', '.txt': 'text/plain; charset=utf-8',
+  '.ico': 'image/x-icon', '.webp': 'image/webp', '.txt': 'text/plain; charset=utf-8',
 };
 
 /** Sends a file from `root`. Returns false when it does not exist or is outside `root`. */
@@ -28,7 +28,7 @@ function sendFile(req, res, root, relative, { secret = false } = {}) {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Robots-Tag', 'noindex, nofollow'); // keep Google away from the admin page
   } else {
-    const fresh = ext === '.html' || ext === '.webmanifest' || path.basename(file) === 'sw.js' || !config.isProduction;
+    const fresh = ext === '.html' || !config.isProduction;
     res.setHeader('Cache-Control', fresh ? 'no-cache' : 'public, max-age=86400');
   }
   if (req.method === 'HEAD') { res.end(); return true; }

@@ -47,7 +47,7 @@ function createMysql(cfg) {
         logger.warn(`Could not auto-create database "${cfg.name}" (${err.message}). Trying to use it anyway.`);
       }
 
-      pool = mysql.createPool({ ...base, database: cfg.name, waitForConnections: true, connectionLimit: 10, charset: 'utf8mb4' });
+      pool = mysql.createPool({ ...base, database: cfg.name, waitForConnections: true, connectionLimit: process.env.VERCEL ? 3 : 10, connectTimeout: 15000, enableKeepAlive: true, charset: 'utf8mb4' });
       for (const statement of schemaStatements()) await pool.query(statement);
       logger.info(`MySQL connected (${cfg.host}:${cfg.port}/${cfg.name})`);
     },

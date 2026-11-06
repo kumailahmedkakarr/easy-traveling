@@ -31,8 +31,22 @@ if (isProduction && authSecret === 'dev-only-secret-change-me') throw new Error(
 const adminPath = required('ADMIN_PATH', 'secret-admin');
 if (!/^[A-Za-z0-9_-]{6,60}$/.test(adminPath)) throw new Error('ADMIN_PATH must be 6-60 letters, digits, - or _');
 
-const dbName = process.env.DB_NAME || 'easetraveling';
-if (!/^[A-Za-z0-9_]+$/.test(dbName)) throw new Error('DB_NAME may only contain letters, digits and _');
+/** Most hosts give ONE connection link: mysql://user:password@host:3306/database?ssl=true */
+function dbFromUrl() {
+  const link = process.env.DATABASE_URL;
+  if (!link) return null;
+  try {
+    const u = new URL(link);
+    return {
+      host: u.hostname, port: Number(u.port) || 3306, user: decodeURIComponent(u.username), password: decodeURIComponent(u.password),
+      name: u.pathname.replace(/^\//, '') || undefined, ssl: u.searchParams.get('ssl') === 'true' || /ssl-mode=required/i.test(u.search),
+    };
+  } catch { throw new Error('DATABASE_URL is not a valid link (expected mysql://user:password@host:3306/database)'); }
+}
+const fromUrl = dbFromUrl();
+const dbName = (fromUrl && fromUrl.name) || process.env.DB_NAME || 'easetraveling';
+if (!/^[A-Za-z0-9_]+$/.test(dbName)) throw new Error('The database name may only contain letters, digits and _');
+const serverless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
 
 module.exports = Object.freeze({
   env,
@@ -48,15 +62,22 @@ module.exports = Object.freeze({
   adminEmail: required('ADMIN_EMAIL', 'admin@easetraveling.pk'),
   adminPassword: required('ADMIN_PASSWORD', 'Admin@12345'),
   seedDemo: process.env.SEED_DEMO_DATA ? process.env.SEED_DEMO_DATA === 'true' : !isProduction,
-  dbDriver: (process.env.DB_DRIVER || 'memory').toLowerCase(),   // 'memory' (no database) or 'mysql'
-  dataFile: process.env.DATA_FILE || path.join(__dirname, '..', 'data', 'dev-data.json'),
+  serverless,                                  // true on Vercel: no writable disk, no long-running server
+  // 'memory' (no database) or 'mysql'. If a database link / host is given and DB_DRIVER is not, MySQL is used.
+  dbDriver: (process.env.DB_DRIVER || (fromUrl || process.env.DB_HOST ? 'mysql' : 'memory')).toLowerCase(),
+  dataFile: serverless ? null : (process.env.DATA_FILE || path.join(__dirname, '..', 'data', 'dev-data.json')),
+  payment: {                                   // where customers send money (shown on the website and the ticket)
+    easypaisa: process.env.PAY_EASYPAISA || '03363739610',
+    bankName: process.env.PAY_BANK_NAME || 'Bank Al Falah',
+    bankAccount: process.env.PAY_BANK_ACCOUNT || '00601004849348',
+  },
   db: {
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: Number(process.env.DB_PORT) || 3306,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
+    host: (fromUrl && fromUrl.host) || process.env.DB_HOST || '127.0.0.1',
+    port: (fromUrl && fromUrl.port) || Number(process.env.DB_PORT) || 3306,
+    user: (fromUrl && fromUrl.user) || process.env.DB_USER || 'root',
+    password: (fromUrl && fromUrl.password) || process.env.DB_PASSWORD || '',
     name: dbName,
-    ssl: process.env.DB_SSL === 'true',
+    ssl: (fromUrl && fromUrl.ssl) || process.env.DB_SSL === 'true',
   },
   support: {                                   // shown on the website (leave empty to hide)
     phone: (process.env.SUPPORT_PHONE || '').trim(),

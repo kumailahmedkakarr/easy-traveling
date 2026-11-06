@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const config = require('../config');
 const { uid } = require('../utils/ids');
 const { unauthorized } = require('../utils/errors');
+const { DuplicateKeyError } = require('../db/errors');
 
 // ---------- password hashing (scrypt, built into Node) ----------
 function hashPassword(password) {
@@ -55,7 +56,10 @@ function createAdminAuthService(store) {
     /** The .env file is the source of truth: changing ADMIN_PASSWORD changes the login. */
     async ensureAdmin(email, password) {
       const row = await store.findAdminByEmail(email);
-      if (!row) await store.createAdmin({ id: uid(), name: 'Admin', email, passwordHash: hashPassword(password) });
+      if (!row) {
+        try { await store.createAdmin({ id: uid(), name: 'Admin', email, passwordHash: hashPassword(password) }); }
+        catch (err) { if (!(err instanceof DuplicateKeyError)) throw err; } // another server instance created it first
+      }
       else if (!verifyPassword(password, row.passwordHash)) await store.setAdminPassword(row.id, hashPassword(password));
     },
   };

@@ -63,8 +63,8 @@ const carOperators = [
 ];
 
 const PAYMENT_METHODS = {
-  bus: ['easypaisa', 'jazzcash', 'raast', 'bank'],
-  car: ['easypaisa', 'jazzcash', 'raast', 'bank', 'cash'],
+  bus: ['easypaisa', 'bank'],
+  car: ['easypaisa', 'bank', 'cash'],
 };
 
 /** Cheapest price per route, used for the "popular routes" cards on the home page. */

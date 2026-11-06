@@ -2,20 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ease Traveling - Book Bus & 2D Car Seats in Pakistan</title>
-<meta name="description" content="Book bus and 2D car seats between Quetta, Karachi, Lahore and Islamabad. Fixed fares, real seat map, pickup pin on the map. No account needed.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ease Traveling - Book Bus & 2D Car Seats Across Pakistan</title>
+<meta name="description" content="Book bus and 2D car seats between Quetta, Karachi, Lahore and Islamabad. Fixed fares, real seat map, pickup point on the map. No account needed.">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0868C8">
+<meta name="theme-color" content="#071D36">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Ease Traveling - Book Bus & 2D Car Seats">
-<meta property="og:description" content="Fixed fares, real seat map and pickup pin. Book in a minute, no account needed.">
-<meta property="og:image" content="/assets/icons/icon-512.png">
-<link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
-<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Ease Traveling">
+<meta property="og:title" content="Ease Traveling - Your Journey, Our Priority">
+<meta property="og:description" content="Book bus and 2D car seats across Pakistan. Fixed fares, real seat map, no account needed.">
+<link rel="icon" type="image/png" href="/assets/images/logo.png">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="/js/shared/tailwind.js"></script>
@@ -26,80 +21,173 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen flex flex-col">
 
-<!-- ============ Opening splash (shown once per visit) ============ -->
-<div id="splash" aria-hidden="true">
-  <div class="splash-card">
-    <img src="/assets/images/logo.png" alt="" class="splash-logo">
-    <div class="splash-title">Ease<span>Traveling</span></div>
-    <div class="splash-tag">Your journey, our priority</div>
-    <div class="splash-bar"><i></i></div>
-  </div>
-</div>
-
-
-<!-- ============ Top bar ============ -->
-<header class="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-[700]">
-  <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
-    <a href="/" class="flex items-center gap-2">
-      <img src="/assets/images/logo.png" alt="Ease Traveling" class="h-9 w-9 rounded-lg object-contain">
-      <span class="font-extrabold text-lg tracking-tight text-ink">Ease<span class="text-brand-600">Traveling</span></span>
+<!-- ================= HEADER ================= -->
+<header class="bg-navy-dark text-white sticky top-0 z-[700] border-b border-navy-light shadow-md no-print">
+  <div class="wrap flex items-center justify-between h-20">
+    <a href="#" data-action="navigate" data-args='["home"]' class="flex items-center gap-3">
+      <div class="w-14 h-14 bg-white rounded-xl p-1 shadow-lg hover:scale-105 transition"><img src="/assets/images/logo.png" alt="Ease Traveling logo" class="w-full h-full object-contain"></div>
+      <div>
+        <div class="text-2xl font-extrabold tracking-tight"><span class="text-brand-500">Ease</span> Traveling</div>
+        <p class="text-[10px] text-slate-300 font-medium tracking-widest uppercase">Your Journey, Our Priority</p>
+      </div>
     </a>
-    <nav class="hidden lg:flex items-center gap-1 text-sm font-semibold text-ink-soft">
-      <a href="#book" class="px-3 py-2 rounded-lg hover:text-brand-600">Book</a>
-      <a href="#routes" class="px-3 py-2 rounded-lg hover:text-brand-600">Routes</a>
-      <a href="#how" class="px-3 py-2 rounded-lg hover:text-brand-600">How it works</a>
-      <a href="#faq" class="px-3 py-2 rounded-lg hover:text-brand-600">FAQ</a>
-      <a href="#help" class="px-3 py-2 rounded-lg hover:text-brand-600">Help</a>
+    <nav id="nav-links" class="hidden lg:flex items-center gap-1 text-sm">
+      <button data-action="navigate" data-args='["home"]' data-nav="home" class="nav-link">Home</button>
+      <button data-action="openBooking" data-args='["bus"]' data-nav="book-bus" class="nav-link">Search Buses</button>
+      <button data-action="openBooking" data-args='["car"]' data-nav="book-car" class="nav-link">2D Car</button>
+      <button data-action="openModal" data-args='["trips"]' class="nav-link">My Bookings</button>
+      <button data-action="navigate" data-args='["about"]' data-nav="about" class="nav-link">About</button>
+      <button data-action="navigate" data-args='["contact"]' data-nav="contact" class="nav-link">Contact</button>
     </nav>
-    <div class="flex items-center gap-2">
-      <button data-install class="hidden text-xs font-extrabold bg-brand-50 text-brand-600 px-3 py-2 rounded-xl" data-action="installApp"><i class="fa-solid fa-download mr-1"></i>Install app</button>
-      <button data-action="openModal" data-args='["trips"]' class="text-xs font-extrabold text-white bg-brand-600 hover:bg-brand-700 px-3 py-2 rounded-xl"><i class="fa-solid fa-suitcase-rolling mr-1"></i>My trips</button>
-    </div>
+    <button data-action="toggleMenu" class="lg:hidden p-2.5 rounded-lg bg-navy-light" aria-label="Menu"><i class="fa-solid fa-bars text-xl"></i></button>
+  </div>
+  <div id="mobile-menu" class="hidden lg:hidden bg-navy border-t border-navy-light px-4 pt-2 pb-5 space-y-1 text-sm font-semibold">
+    <button data-action="navigate" data-args='["home"]' class="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-navy-light">Home</button>
+    <button data-action="openBooking" data-args='["bus"]' class="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-navy-light">Search Buses</button>
+    <button data-action="openBooking" data-args='["car"]' class="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-navy-light">2D Car</button>
+    <button data-action="openModal" data-args='["trips"]' class="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-navy-light">My Bookings</button>
+    <button data-action="navigate" data-args='["about"]' class="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-navy-light">About</button>
+    <button data-action="navigate" data-args='["contact"]' class="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-navy-light">Contact</button>
   </div>
 </header>
 
-<!-- ============ Hero ============ -->
-<section class="hero text-white relative overflow-hidden">
-  <div class="hero-glow"></div>
-  <div class="max-w-6xl mx-auto px-4 pt-7 pb-14 lg:pt-12 lg:pb-16 relative grid lg:grid-cols-[1.2fr_.8fr] gap-8 items-center">
-    <div>
-      <span class="hero-chip"><i class="fa-solid fa-bolt"></i>Book in under a minute · No account needed</span>
-      <h1 class="text-3xl lg:text-5xl font-extrabold leading-tight mt-3 max-w-2xl">Your seat, your pickup point, your ticket.</h1>
-      <p class="text-sm lg:text-base text-blue-100 mt-3 max-w-xl">Bus and 2D car seats between Quetta, Karachi, Lahore and Islamabad. See the real seat map, pin where we pick you up, and know the full fare before you book.</p>
-      <div class="flex flex-wrap gap-3 mt-5">
-        <a href="#book" class="bg-white text-brand-700 font-extrabold text-sm px-5 py-3 rounded-2xl shadow-lg hover:bg-blue-50"><i class="fa-solid fa-ticket mr-1.5"></i>Book a seat</a>
-        <a href="#routes" class="font-extrabold text-sm px-5 py-3 rounded-2xl border border-white/40 hover:bg-white/10">See routes</a>
+<main class="flex-grow">
+
+<!-- ================= HOME ================= -->
+<section id="view-home" class="page-view space-y-14 pb-16">
+
+  <!-- Hero + search -->
+  <div class="relative bg-navy text-white min-h-[540px] flex items-center overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1920&q=80" alt="" class="absolute inset-0 w-full h-full object-cover object-right opacity-35">
+    <div class="absolute inset-0 hero-overlay"></div>
+    <div class="wrap relative py-14 w-full z-10">
+      <div class="max-w-2xl space-y-4">
+        <span class="inline-block text-xs font-bold tracking-widest text-brand-bright uppercase bg-brand-500/20 px-3 py-1 rounded-full border border-brand-bright/30">Travel Smart</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">Your Journey <br><span class="text-brand-bright">Our Priority</span></h1>
+        <p class="text-slate-300 text-base sm:text-lg max-w-xl">Book bus and 2D car seats easily, safely and comfortably across Pakistan. No account needed.</p>
       </div>
-      <div class="flex flex-wrap gap-2 mt-5">
-        <span class="hero-chip"><i class="fa-solid fa-tag"></i>Fixed fares</span>
-        <span class="hero-chip"><i class="fa-solid fa-chair"></i>Real seat map</span>
-        <span class="hero-chip"><i class="fa-solid fa-location-dot"></i>Pickup pin</span>
-        <span class="hero-chip"><i class="fa-solid fa-rotate-left"></i>Easy cancel</span>
+
+      <div class="mt-9 bg-white rounded-2xl p-6 sm:p-8 text-slate-800 shadow-floating max-w-5xl">
+        <div class="flex border-b border-slate-200 mb-6 gap-6 font-medium text-sm">
+          <button id="h-tab-bus" data-action="setHeroMode" data-args='["bus"]' class="pb-3 border-b-2"><i class="fa-solid fa-bus mr-2"></i>Search Bus</button>
+          <button id="h-tab-car" data-action="setHeroMode" data-args='["car"]' class="pb-3 border-b-2"><i class="fa-solid fa-car-side mr-2"></i>2D Car</button>
+        </div>
+        <form data-submit="heroSearch" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+          <div class="md:col-span-3"><label class="label uppercase" for="h-from">From</label><select id="h-from" class="field font-semibold"></select></div>
+          <div class="md:col-span-3"><label class="label uppercase" for="h-to">To</label><select id="h-to" class="field font-semibold"></select></div>
+          <div class="md:col-span-3"><label class="label uppercase" for="h-date">Date</label><input type="date" id="h-date" required class="field font-semibold"></div>
+          <div class="md:col-span-3"><button class="btn-main" id="h-submit"><i class="fa-solid fa-magnifying-glass mr-2"></i>Search</button></div>
+        </form>
+        <p id="h-error" class="hidden text-xs font-semibold text-rose-600 mt-3"></p>
       </div>
     </div>
-    <div class="hidden lg:block relative">
-      <div class="hero-orb"><img src="/assets/images/logo.png" alt="Ease Traveling bus and car"></div>
-      <div class="hero-float hero-float-a"><i class="fa-solid fa-circle-check text-emerald-500"></i><div><b>Seat confirmed</b><span>Quetta → Karachi</span></div></div>
-      <div class="hero-float hero-float-b"><i class="fa-solid fa-location-dot text-amber-500"></i><div><b>Pickup pinned</b><span>Drag to adjust</span></div></div>
+  </div>
+
+  <!-- Highlights -->
+  <div class="wrap"><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="card flex items-center gap-4 lift"><div class="ibox"><i class="fa-solid fa-shield-halved"></i></div><div><h4 class="font-bold text-base">Safe &amp; Secure</h4><p class="text-xs text-slate-500 mt-1">Your data &amp; travel are fully protected.</p></div></div>
+    <div class="card flex items-center gap-4 lift"><div class="ibox"><i class="fa-solid fa-couch"></i></div><div><h4 class="font-bold text-base">Comfortable Travel</h4><p class="text-xs text-slate-500 mt-1">Modern luxury buses with reclining seats.</p></div></div>
+    <div class="card flex items-center gap-4 lift"><div class="ibox"><i class="fa-solid fa-tag"></i></div><div><h4 class="font-bold text-base">Affordable Prices</h4><p class="text-xs text-slate-500 mt-1">Best competitive fares, guaranteed.</p></div></div>
+    <div class="card flex items-center gap-4 lift"><div class="ibox"><i class="fa-solid fa-headset"></i></div><div><h4 class="font-bold text-base">24/7 Support</h4><p class="text-xs text-slate-500 mt-1">We are always here to assist you.</p></div></div>
+  </div></div>
+
+  <!-- Popular routes -->
+  <div class="wrap">
+    <div class="flex items-end justify-between mb-7 gap-4">
+      <div><h2 class="section-title">Popular Routes</h2><p class="section-sub">Our intercity routes via Khuzdar. Tap a route to start booking.</p></div>
+      <button data-action="openBooking" data-args='["bus"]' class="text-brand-600 font-semibold text-sm whitespace-nowrap">View All <i class="fa-solid fa-arrow-right ml-1"></i></button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div data-action="bookRoute" data-args='["bus","Quetta","Karachi"]' class="group relative rounded-2xl overflow-hidden shadow-card cursor-pointer lift h-64">
+        <img src="/assets/images/al-munir.jpg" alt="Quetta to Karachi bus" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy/30 to-transparent p-5 flex flex-col justify-end text-white">
+          <h3 class="text-lg font-bold">Quetta <i class="fa-solid fa-arrow-right text-xs text-brand-bright"></i> Karachi</h3>
+          <p class="text-[11px] text-slate-200">via Khuzdar · Al Munir &amp; Shandar Daiwoo</p><p class="text-xs text-brand-cyan font-semibold mt-1">From <span data-route-price="bus|Quetta|Karachi">Rs. 3,000</span></p></div>
+      </div>
+      <div data-action="bookRoute" data-args='["bus","Karachi","Quetta"]' class="group relative rounded-2xl overflow-hidden shadow-card cursor-pointer lift h-64">
+        <img src="/assets/images/shandar-daiwoo.jpg" alt="Karachi to Quetta bus" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy/30 to-transparent p-5 flex flex-col justify-end text-white">
+          <h3 class="text-lg font-bold">Karachi <i class="fa-solid fa-arrow-right text-xs text-brand-bright"></i> Quetta</h3>
+          <p class="text-[11px] text-slate-200">via Khuzdar · Al Munir &amp; Shandar Daiwoo</p><p class="text-xs text-brand-cyan font-semibold mt-1">From <span data-route-price="bus|Karachi|Quetta">Rs. 2,000</span></p></div>
+      </div>
+    </div>
+    <h3 class="font-extrabold text-lg mt-10 mb-4"><i class="fa-solid fa-car-side text-brand-500 mr-2"></i>2D Car routes</h3>
+    <div id="routes-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </div>
+
+  <!-- Onboard features -->
+  <div class="wrap">
+    <h2 class="section-title">Onboard Features</h2>
+    <p class="section-sub mb-6">Everything you get on your journey</p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="card !p-5 text-center lift"><div class="ibox mx-auto mb-3"><i class="fa-solid fa-wifi"></i></div><h4 class="font-bold text-sm">Wi-Fi</h4></div>
+      <div class="card !p-5 text-center lift"><div class="ibox mx-auto mb-3"><i class="fa-solid fa-tv"></i></div><h4 class="font-bold text-sm">TV</h4></div>
+      <div class="card !p-5 text-center lift"><div class="ibox mx-auto mb-3"><i class="fa-solid fa-snowflake"></i></div><h4 class="font-bold text-sm">AC</h4></div>
+      <div class="card !p-5 text-center lift"><div class="ibox mx-auto mb-3"><i class="fa-solid fa-plug"></i></div><h4 class="font-bold text-sm">Charging Port</h4></div>
+      <div class="card !p-5 text-center lift"><div class="ibox mx-auto mb-3"><i class="fa-solid fa-utensils"></i></div><h4 class="font-bold text-sm">Meal</h4></div>
+      <div class="card !p-5 text-center lift"><div class="ibox mx-auto mb-3"><i class="fa-solid fa-suitcase-rolling"></i></div><h4 class="font-bold text-sm">Luggage</h4></div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="bg-white py-14">
+    <div class="wrap">
+      <h2 class="section-title text-center">How It Works</h2>
+      <p class="section-sub text-center mb-9">Four quick steps. No sign-up needed.</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center px-3"><div class="w-14 h-14 rounded-full bg-navy text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-3">1</div><h4 class="font-bold">Choose your route</h4><p class="text-sm text-slate-500 mt-1">Pick bus or 2D car, your cities and the travel date.</p></div>
+        <div class="text-center px-3"><div class="w-14 h-14 rounded-full bg-navy text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-3">2</div><h4 class="font-bold">Select your seat</h4><p class="text-sm text-slate-500 mt-1">Compare rides and tap your seats on the live seat map.</p></div>
+        <div class="text-center px-3"><div class="w-14 h-14 rounded-full bg-navy text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-3">3</div><h4 class="font-bold">Add your details</h4><p class="text-sm text-slate-500 mt-1">Name, CNIC and phone. Pin your pickup point on the map.</p></div>
+        <div class="text-center px-3"><div class="w-14 h-14 rounded-full bg-navy text-white font-extrabold text-xl flex items-center justify-center mx-auto mb-3">4</div><h4 class="font-bold">Pay &amp; get your ticket</h4><p class="text-sm text-slate-500 mt-1">Pay by Easypaisa or bank and get your ticket with QR code.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment methods -->
+  <div class="wrap">
+    <h2 class="section-title">Payment Methods</h2>
+    <p class="section-sub mb-6">Pay easily using Easypaisa or bank transfer. Cash is available on 2D car.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+      <div class="card flex items-center gap-4"><div class="ibox bg-green-50 text-green-600"><i class="fa-solid fa-wallet"></i></div>
+        <div><h4 class="font-bold">Easypaisa</h4><p id="pay-easypaisa" class="text-lg font-extrabold text-brand-600 select-all">03363739610</p></div></div>
+      <div class="card flex items-center gap-4"><div class="ibox"><i class="fa-solid fa-building-columns"></i></div>
+        <div><h4 id="pay-bank-name" class="font-bold">Bank Al Falah</h4><p id="pay-bank-account" class="text-lg font-extrabold text-brand-600 select-all">00601004849348</p></div></div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="wrap max-w-3xl">
+    <h2 class="section-title text-center">Frequently Asked Questions</h2>
+    <div class="space-y-3 mt-7">
+      <details class="faq"><summary>Do I need an account? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>No. Choose your seat and fill in your details. Your booking number and phone number are all you need to find or cancel a booking later.</p></details>
+      <details class="faq"><summary>How do I pay? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>After you confirm, send the total to our Easypaisa or Bank Al Falah account shown on the ticket and keep your receipt. 2D car bookings can also be paid in cash to the driver.</p></details>
+      <details class="faq"><summary>How do I cancel a booking? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>Open <b>My Bookings</b>, choose your booking (or enter the booking number and phone), then tap <b>Cancel this booking</b>. The seat becomes free for others.</p></details>
+      <details class="faq"><summary>Why do you ask for my CNIC? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>Operators need the passenger list with CNIC for every journey. It is used only to manage your booking and is visible only to the operator's admin.</p></details>
+      <details class="faq"><summary>What is the pickup point on the map? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>It is an optional point that tells the driver where you will be waiting. Tap the map, or use <b>My location</b>, and drag the pin to adjust it.</p></details>
+      <details class="faq"><summary>Is there a service fee? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>Bus bookings include a small fixed service fee shown in the fare summary before you confirm. 2D car bookings have no service fee.</p></details>
     </div>
   </div>
 </section>
 
-<!-- ============ Booking app ============ -->
-<main id="book" class="max-w-6xl mx-auto lg:px-4 lg:py-4 lg:grid lg:grid-cols-[1.15fr_1fr] lg:gap-4 lg:items-start scroll-mt-16 -mt-8 lg:mt-0">
-
-  <!-- Map -->
-  <section class="relative lg:sticky lg:top-[4.25rem]">
-    <div id="map" class="h-[36vh] lg:h-[calc(100vh-6rem)] lg:rounded-3xl overflow-hidden"></div>
-    <div id="map-hint" class="hidden absolute left-3 right-3 bottom-8 lg:bottom-4 z-[400] bg-ink text-white text-xs font-semibold rounded-xl px-3 py-2 shadow-card text-center">
-      <i class="fa-solid fa-hand-pointer mr-1"></i>Tap the map to set your pickup point
+<!-- ================= BOOKING ================= -->
+<section id="view-book" class="page-view hidden pb-16">
+  <div class="banner py-9">
+    <div class="wrap relative">
+      <button data-action="navigate" data-args='["home"]' class="text-xs text-brand-bright font-semibold mb-3"><i class="fa-solid fa-arrow-left mr-2"></i>Back to Home</button>
+      <h1 class="text-3xl font-extrabold">Book Your Seat</h1>
+      <p class="text-slate-300 text-sm mt-1">Choose a ride, pick your seats and confirm. It takes about a minute.</p>
     </div>
-  </section>
-
-  <!-- Sheet -->
-  <section class="sheet -mt-6 relative z-[450] p-5 pb-8 min-h-[60vh] lg:mt-0 lg:min-h-0">
+  </div>
+  <div class="wrap mt-6 grid lg:grid-cols-5 gap-6 items-start">
+    <section class="order-1 lg:order-2 lg:col-span-2 lg:sticky lg:top-24">
+      <div class="sheet overflow-hidden relative">
+        <div id="map" class="h-60 lg:h-[calc(100vh-14rem)] lg:min-h-[420px]"></div>
+        <div id="map-hint" class="hidden absolute left-3 right-3 bottom-3 z-[400] bg-navy text-white text-xs font-semibold rounded-xl px-3 py-2 shadow-card text-center"><i class="fa-solid fa-hand-pointer mr-1"></i>Tap the map to set your pickup point</div>
+      </div>
+    </section>
+    <section class="sheet p-5 sm:p-6 order-2 lg:order-1 lg:col-span-3">
 
     <div class="grid grid-cols-2 bg-slate-100 rounded-2xl p-1 mb-5">
       <button id="mode-bus" data-action="setMode" data-args='["bus"]' class="py-2.5 rounded-xl text-sm font-extrabold"><i class="fa-solid fa-bus mr-1.5"></i>Bus</button>
@@ -196,6 +284,7 @@
         <div>
           <span class="label">How will you pay?</span>
           <div id="pay-options" class="grid grid-cols-3 gap-2"></div>
+          <div id="pay-info" class="mt-2 text-xs text-ink-soft bg-brand-50 rounded-xl p-3"></div>
         </div>
 
         <div class="bg-slate-50 rounded-2xl p-3 text-sm space-y-1">
@@ -217,7 +306,7 @@
       <div class="text-center mb-4">
         <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 text-2xl flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-check"></i></div>
         <h2 class="text-xl font-extrabold">Seat booked!</h2>
-        <p class="text-xs text-ink-soft">Your trip is saved in <b>My trips</b> on this device. Keep the booking number and your phone to find or cancel it anywhere.</p>
+        <p class="text-xs text-ink-soft">Your booking is saved under <b>My Bookings</b> on this device. Keep your booking number and phone number to find or cancel it any time.</p>
       </div>
       <div id="ticket-box"></div>
       <div class="grid grid-cols-2 gap-3 mt-4 no-print">
@@ -227,128 +316,86 @@
       <button data-action="newBooking" class="btn-main !py-3 mt-3 no-print">Book another seat</button>
     </div>
   </section>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="view-about" class="page-view hidden space-y-12 pb-16">
+  <div class="banner py-16"><div class="wrap relative">
+    <h1 class="text-4xl font-extrabold">About <span class="text-brand-bright">Ease Traveling</span></h1>
+    <p class="text-slate-300 max-w-2xl mt-2">More than just a bus ticket platform, your reliable travel partner across Pakistan.</p>
+  </div></div>
+  <div class="wrap space-y-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-4">
+        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Our Story</span>
+        <h2 class="text-3xl font-extrabold">Born from a simple idea, <span class="text-brand-500">built for every traveler.</span></h2>
+        <p class="text-slate-600 text-sm leading-relaxed">Ease Traveling was founded to modernize intercity bus travel in Pakistan. We partner with top operators including Al Munir and Shandar Daiwoo to provide instant seat booking, clear schedules and passenger safety.</p>
+        <p class="text-slate-600 text-sm leading-relaxed">Whether you travel between Quetta and Karachi, you get seamless reservation, digital tickets and friendly customer care.</p>
+      </div>
+      <img src="/assets/images/shandar-daiwoo.jpg" alt="Shandar Daiwoo bus" loading="lazy" class="rounded-3xl shadow-floating w-full h-80 object-cover">
+    </div>
+    <div class="card !p-8"><h3 class="text-2xl font-extrabold text-center mb-8">What Drives Us</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+        <div class="p-4 space-y-2"><div class="ibox !w-12 !h-12 !text-xl mx-auto"><i class="fa-solid fa-heart"></i></div><h4 class="font-bold">Customer First</h4><p class="text-xs text-slate-500">Your satisfaction and safety come first.</p></div>
+        <div class="p-4 space-y-2"><div class="ibox !w-12 !h-12 !text-xl mx-auto"><i class="fa-solid fa-handshake"></i></div><h4 class="font-bold">Trust &amp; Transparency</h4><p class="text-xs text-slate-500">No hidden fees or surprise prices.</p></div>
+        <div class="p-4 space-y-2"><div class="ibox !w-12 !h-12 !text-xl mx-auto"><i class="fa-solid fa-chart-line"></i></div><h4 class="font-bold">Growth for Everyone</h4><p class="text-xs text-slate-500">Supporting local bus transport.</p></div>
+        <div class="p-4 space-y-2"><div class="ibox !w-12 !h-12 !text-xl mx-auto"><i class="fa-solid fa-leaf"></i></div><h4 class="font-bold">A Greener Tomorrow</h4><p class="text-xs text-slate-500">Efficient, eco-friendly public transit.</p></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="view-contact" class="page-view hidden space-y-12 pb-16">
+  <div class="bg-navy text-white py-12 text-center"><h1 class="text-3xl font-extrabold">Contact Ease Traveling</h1><p class="text-slate-300 text-sm mt-1">We are here to help with your booking.</p></div>
+  <div class="wrap grid grid-cols-1 md:grid-cols-12 gap-8">
+    <div class="md:col-span-5 space-y-4">
+      <div class="card flex items-center gap-4"><div class="ibox"><i class="fa-solid fa-phone"></i></div><div><h4 class="font-bold text-sm">Phone Support</h4><a id="c-phone" href="tel:+923001234567" class="text-xs font-semibold text-slate-600">+92 300 1234567</a></div></div>
+      <div class="card flex items-center gap-4"><div class="ibox"><i class="fa-solid fa-envelope"></i></div><div><h4 class="font-bold text-sm">Email</h4><a id="c-email" href="mailto:support@easetravels.pk" class="text-xs font-semibold text-slate-600">support@easetravels.pk</a></div></div>
+      <a id="c-wa" target="_blank" rel="noopener" class="hidden card flex items-center gap-4"><div class="ibox bg-green-50 text-green-600"><i class="fa-brands fa-whatsapp"></i></div><div><h4 class="font-bold text-sm">WhatsApp</h4><p class="text-xs font-semibold text-slate-600">Chat with us</p></div></a>
+      <div class="card flex items-center gap-4"><div class="ibox"><i class="fa-solid fa-location-dot"></i></div><div><h4 class="font-bold text-sm">Headquarters</h4><p class="text-xs text-slate-600">Ease Traveling Plaza, Zarghoon Road, Quetta</p></div></div>
+      <button data-action="openModal" data-args='["track"]' class="card w-full flex items-center gap-4 text-left lift"><div class="ibox"><i class="fa-solid fa-ticket"></i></div><div><h4 class="font-bold text-sm">Track a booking</h4><p class="text-xs text-slate-600">Use your booking number and phone</p></div></button>
+    </div>
+    <form data-submit="sendContact" class="md:col-span-7 card !p-8 space-y-4">
+      <h3 class="text-xl font-bold">Send Us a Message</h3>
+      <div><label class="label">Full Name</label><input name="name" required class="field"></div>
+      <div><label class="label">Email</label><input name="email" type="email" required class="field"></div>
+      <div><label class="label">Message</label><textarea name="message" rows="4" required class="field"></textarea></div>
+      <p id="contact-msg" class="hidden text-xs font-semibold"></p>
+      <button class="btn-main">Send Message</button>
+    </form>
+  </div>
+</section>
+
 </main>
 
-<!-- ============ Popular routes ============ -->
-<section id="routes" class="bg-white scroll-mt-14">
-  <div class="max-w-6xl mx-auto px-4 py-10">
-    <h2 class="section-title">Popular routes</h2>
-    <p class="section-sub">Tap a route and we fill in the booking for you.</p>
-    <div id="routes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5"></div>
-  </div>
-</section>
-
-<!-- ============ Services ============ -->
-<section class="bg-slate-50">
-  <div class="max-w-6xl mx-auto px-4 py-10">
-    <h2 class="section-title">Two ways to travel</h2>
-    <p class="section-sub">Pick the comfort and price that suit your trip.</p>
-    <div class="grid md:grid-cols-2 gap-4 mt-5">
-      <div class="tile flex gap-4"><div class="tile-icon flex-shrink-0 !w-14 !h-14 !text-2xl"><i class="fa-solid fa-bus"></i></div>
-        <div><h3 class="font-extrabold text-lg">Bus</h3><p class="text-sm text-ink-soft mt-1">Sleeper and business class coaches with AC, charging and Wi-Fi. Choose your departure time and seat on a real seat map.</p>
-        <button data-action="bookRoute" data-args='["bus","Quetta","Karachi"]' class="mt-3 text-sm font-extrabold text-brand-600">Book a bus <i class="fa-solid fa-arrow-right"></i></button></div></div>
-      <div class="tile flex gap-4"><div class="tile-icon flex-shrink-0 !w-14 !h-14 !text-2xl"><i class="fa-solid fa-car-side"></i></div>
-        <div><h3 class="font-extrabold text-lg">2D Car</h3><p class="text-sm text-ink-soft mt-1">Faster city-to-city rides in a comfortable AC car. Book one seat or the whole car for your family or friends.</p>
-        <button data-action="bookRoute" data-args='["car","Quetta","Lahore"]' class="mt-3 text-sm font-extrabold text-brand-600">Book a car <i class="fa-solid fa-arrow-right"></i></button></div></div>
+<!-- ================= FOOTER ================= -->
+<footer class="bg-navy-dark text-slate-300 text-xs border-t border-navy-light no-print">
+  <div class="wrap py-12 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+    <div class="md:col-span-5 space-y-2">
+      <div class="flex items-center gap-3"><div class="w-12 h-12 bg-white rounded-lg p-1"><img src="/assets/images/logo.png" alt="" class="w-full h-full object-contain"></div>
+        <span class="text-xl font-extrabold text-white"><span class="text-brand-500">Ease</span> Traveling</span></div>
+      <p class="text-slate-400">Better Journeys • Greater Connections</p>
+      <p class="text-[11px] text-slate-500">Pakistan's intercity bus and 2D car seat booking platform.</p>
+    </div>
+    <div class="md:col-span-7 flex flex-wrap md:justify-end gap-x-7 gap-y-2 font-medium">
+      <button data-action="navigate" data-args='["home"]' class="hover:text-white">Home</button>
+      <button data-action="openBooking" data-args='["bus"]' class="hover:text-white">Search Buses</button>
+      <button data-action="openBooking" data-args='["car"]' class="hover:text-white">2D Car</button>
+      <button data-action="openModal" data-args='["trips"]' class="hover:text-white">My Bookings</button>
+      <button data-action="navigate" data-args='["about"]' class="hover:text-white">About</button>
+      <button data-action="navigate" data-args='["contact"]' class="hover:text-white">Contact</button>
     </div>
   </div>
-</section>
-
-<!-- ============ Our buses ============ -->
-<section class="bg-white">
-  <div class="max-w-6xl mx-auto px-4 py-10">
-    <h2 class="section-title">Travel in comfort</h2>
-    <p class="section-sub">Coaches on the Quetta ⇄ Karachi route, with sleeper and business class seats.</p>
-    <div class="grid md:grid-cols-2 gap-4 mt-5">
-      <article class="op-card"><img src="/assets/images/al-munir.jpg" alt="Al Munir sleeper coach" loading="lazy"><div class="op-body"><span class="op-tag">Sleeper</span><h3>Al Munir</h3><p>Quetta ⇄ Karachi via Khuzdar · AC · Charging · Wi-Fi</p><button data-action="bookRoute" data-args='["bus","Quetta","Karachi"]'>Book this route <i class="fa-solid fa-arrow-right"></i></button></div></article>
-      <article class="op-card"><img src="/assets/images/shandar-daiwoo.jpg" alt="Shandar Daiwoo business class coach" loading="lazy"><div class="op-body"><span class="op-tag">Business class</span><h3>Shandar Daiwoo</h3><p>Quetta ⇄ Karachi via Khuzdar · 2/1 and 2/2 seats · AC</p><button data-action="bookRoute" data-args='["bus","Karachi","Quetta"]'>Book this route <i class="fa-solid fa-arrow-right"></i></button></div></article>
-    </div>
-  </div>
-</section>
-
-<!-- ============ How it works ============ -->
-<section id="how" class="bg-white scroll-mt-14">
-  <div class="max-w-6xl mx-auto px-4 py-10">
-    <h2 class="section-title">How it works</h2>
-    <p class="section-sub">Four quick steps. No sign-up, no app download needed.</p>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
-      <div class="tile"><div class="tile-icon mb-3"><i class="fa-solid fa-route"></i></div><b>1. Choose your route</b><p class="text-sm text-ink-soft mt-1">Pick bus or car, your cities and the travel date.</p></div>
-      <div class="tile"><div class="tile-icon mb-3"><i class="fa-solid fa-chair"></i></div><b>2. Pick your seat</b><p class="text-sm text-ink-soft mt-1">Compare rides and tap your seats on the live seat map.</p></div>
-      <div class="tile"><div class="tile-icon mb-3"><i class="fa-solid fa-location-dot"></i></div><b>3. Add your details</b><p class="text-sm text-ink-soft mt-1">Name, CNIC and phone. Drop a pin where we should pick you up.</p></div>
-      <div class="tile"><div class="tile-icon mb-3"><i class="fa-solid fa-ticket"></i></div><b>4. Get your ticket</b><p class="text-sm text-ink-soft mt-1">Instant ticket with QR code. Share it on WhatsApp.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ Why us ============ -->
-<section class="bg-slate-50">
-  <div class="max-w-6xl mx-auto px-4 py-10">
-    <h2 class="section-title">Why book with Ease Traveling</h2>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
-      <div class="tile flex gap-3"><div class="tile-icon flex-shrink-0"><i class="fa-solid fa-tag"></i></div><div><b>Fixed, honest fares</b><p class="text-sm text-ink-soft mt-0.5">The full price, including any service fee, is shown before you confirm.</p></div></div>
-      <div class="tile flex gap-3"><div class="tile-icon flex-shrink-0"><i class="fa-solid fa-chair"></i></div><div><b>Real seat map</b><p class="text-sm text-ink-soft mt-0.5">Seats taken by others are blocked instantly. No double booking.</p></div></div>
-      <div class="tile flex gap-3"><div class="tile-icon flex-shrink-0"><i class="fa-solid fa-location-crosshairs"></i></div><div><b>Pickup pin on the map</b><p class="text-sm text-ink-soft mt-0.5">Show exactly where you will be waiting. Drag the pin to adjust.</p></div></div>
-      <div class="tile flex gap-3"><div class="tile-icon flex-shrink-0"><i class="fa-solid fa-rotate-left"></i></div><div><b>Cancel in seconds</b><p class="text-sm text-ink-soft mt-0.5">Use your booking number and phone. The seat is freed straight away.</p></div></div>
-      <div class="tile flex gap-3"><div class="tile-icon flex-shrink-0"><i class="fa-solid fa-wallet"></i></div><div><b>Pay your way</b><p class="text-sm text-ink-soft mt-0.5">Choose Easypaisa, JazzCash, Raast or bank transfer. Cash is available on 2D car.</p></div></div>
-      <div class="tile flex gap-3"><div class="tile-icon flex-shrink-0"><i class="fa-solid fa-mobile-screen"></i></div><div><b>Install as an app</b><p class="text-sm text-ink-soft mt-0.5">Add it to your home screen. It opens full screen like a normal app.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FAQ ============ -->
-<section id="faq" class="bg-white scroll-mt-14">
-  <div class="max-w-3xl mx-auto px-4 py-10">
-    <h2 class="section-title">Questions people ask</h2>
-    <div class="space-y-2 mt-5">
-      <details class="faq"><summary>Do I need an account? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>No. Just choose your seat and fill in your details. Your booking number and phone number are all you need to find or cancel a booking later.</p></details>
-      <details class="faq"><summary>How do I cancel a booking? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>Open <b>My trips</b> (or <b>Track booking</b> from the Help menu), enter your booking number and the phone you used, then tap <b>Cancel this booking</b>. The seat becomes free for others.</p></details>
-      <details class="faq"><summary>Why do you ask for my CNIC? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>Bus and car operators need the passenger list with CNIC for every journey. It is used only to manage your booking and is visible only to the operator's admin.</p></details>
-      <details class="faq"><summary>What is the pickup pin? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>It is an optional point on the map that tells the driver where you will be waiting. Tap the map, or use <b>My location</b>, and drag the pin if you need to adjust it.</p></details>
-      <details class="faq"><summary>Can I book for friends or family? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>Yes. Select more than one seat and you will be asked for each passenger's name and CNIC. Your contact number is used for the whole booking.</p></details>
-      <details class="faq"><summary>Is there a service fee? <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></summary><p>Bus bookings include a small fixed service fee that is shown in the fare summary before you confirm. 2D car bookings have no service fee.</p></details>
-    </div>
-  </div>
-</section>
-
-<!-- ============ Help ============ -->
-<section id="help" class="bg-slate-50 scroll-mt-14">
-  <div class="max-w-6xl mx-auto px-4 py-10">
-    <h2 class="section-title">Need help?</h2>
-    <p class="section-sub">We are happy to help with your booking.</p>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
-      <a id="help-call" class="hidden tile text-center"><div class="tile-icon mx-auto mb-2"><i class="fa-solid fa-phone"></i></div><b>Call us</b><span id="help-call-text" class="block text-sm text-ink-soft"></span></a>
-      <a id="help-wa" target="_blank" rel="noopener" class="hidden tile text-center"><div class="tile-icon mx-auto mb-2"><i class="fa-brands fa-whatsapp"></i></div><b>WhatsApp</b><span class="block text-sm text-ink-soft">Chat with us</span></a>
-      <a id="help-mail" class="hidden tile text-center"><div class="tile-icon mx-auto mb-2"><i class="fa-solid fa-envelope"></i></div><b>Email</b><span id="help-mail-text" class="block text-sm text-ink-soft"></span></a>
-      <button data-action="openModal" data-args='["contact"]' class="tile text-center"><div class="tile-icon mx-auto mb-2"><i class="fa-solid fa-message"></i></div><b>Send a message</b><span class="block text-sm text-ink-soft">We reply as soon as we can</span></button>
-      <button data-action="openModal" data-args='["track"]' class="tile text-center"><div class="tile-icon mx-auto mb-2"><i class="fa-solid fa-ticket"></i></div><b>Track booking</b><span class="block text-sm text-ink-soft">Booking number + phone</span></button>
-    </div>
-  </div>
-</section>
-
-<!-- ============ Footer ============ -->
-<footer class="bg-ink text-slate-300">
-  <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-    <div class="flex items-center gap-2"><img src="/assets/images/logo.png" alt="" class="h-9 w-9 rounded-lg bg-white object-contain"><div><b class="text-white">Ease Traveling</b><p class="text-xs">Bus and 2D car seats across Pakistan.</p></div></div>
-    <div class="flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
-      <a href="#book" class="hover:text-white">Book</a><a href="#routes" class="hover:text-white">Routes</a><a href="#how" class="hover:text-white">How it works</a><a href="#faq" class="hover:text-white">FAQ</a><a href="#help" class="hover:text-white">Help</a>
-    </div>
-    <p class="text-xs">© <span id="year"></span> Ease Traveling</p>
-  </div>
+  <div class="wrap pb-6"><div class="pt-6 border-t border-navy-light/60 flex flex-col sm:flex-row justify-between gap-3 text-slate-500">
+    <p>© <span id="year"></span> Ease Traveling Pakistan. All rights reserved.</p><p>Easypaisa <span id="f-easypaisa">03363739610</span> • <span id="f-bank">Bank Al Falah 00601004849348</span></p></div></div>
 </footer>
 
-<!-- ============ Mobile bottom menu (app style) ============ -->
-<nav class="bottom-nav flex lg:hidden no-print">
-  <a href="#book" class="active"><i class="fa-solid fa-ticket"></i>Book</a>
-  <button data-action="openModal" data-args='["trips"]'><i class="fa-solid fa-suitcase-rolling"></i>My trips</button>
-  <a href="#routes"><i class="fa-solid fa-route"></i>Routes</a>
-  <a href="#help"><i class="fa-solid fa-headset"></i>Help</a>
-</nav>
-
-<!-- ============ Popups ============ -->
+<!-- ================= POPUPS ================= -->
 <div id="modal-trips" class="modal-bg hidden">
   <div class="modal">
-    <div class="flex items-center justify-between mb-3"><h3 class="font-extrabold text-lg">My trips</h3><button data-action="closeModal" class="text-slate-400 text-xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
-    <p class="text-xs text-ink-soft mb-3">Trips you booked on this device. They are stored only in this browser.</p>
+    <div class="flex items-center justify-between mb-3"><h3 class="font-extrabold text-lg">My Bookings</h3><button data-action="closeModal" class="text-slate-400 text-xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+    <p class="text-xs text-ink-soft mb-3">Bookings made on this device. They are stored only in this browser.</p>
     <div id="trips-list" class="space-y-2"></div>
     <div id="trips-result" data-ticket-root class="mt-3"></div>
     <div class="flex items-center justify-between mt-4 text-xs">
@@ -368,28 +415,6 @@
       <button class="btn-main">Find booking</button>
     </form>
     <div id="track-result" data-ticket-root class="mt-4"></div>
-  </div>
-</div>
-
-<div id="modal-contact" class="modal-bg hidden">
-  <div class="modal">
-    <div class="flex items-center justify-between mb-3"><h3 class="font-extrabold text-lg">Contact us</h3><button data-action="closeModal" class="text-slate-400 text-xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
-    <form data-submit="sendContact" class="space-y-3">
-      <div><label class="label">Your name</label><input name="name" required class="field"></div>
-      <div><label class="label">Email</label><input name="email" type="email" required class="field"></div>
-      <div><label class="label">Message</label><textarea name="message" rows="4" required class="field"></textarea></div>
-      <p id="contact-msg" class="hidden text-xs font-semibold"></p>
-      <button class="btn-main">Send message</button>
-    </form>
-  </div>
-</div>
-
-<div id="modal-install" class="modal-bg hidden">
-  <div class="modal text-center">
-    <img src="/assets/icons/icon-192.png" alt="" class="w-16 h-16 rounded-2xl mx-auto mb-2">
-    <h3 class="font-extrabold text-lg">Install Ease Traveling</h3>
-    <p id="install-help" class="text-sm text-ink-soft mt-2"></p>
-    <button data-action="closeModal" class="btn-main mt-4">Got it</button>
   </div>
 </div>
 
